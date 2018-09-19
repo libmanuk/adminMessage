@@ -10,6 +10,10 @@
  * 
  * @package Omeka\Plugins\adminMessage
  */
+
+ // Define Constants.
+ define('DEFAULT_USAGE_PAGE_STATEMENT', 'Default Usage Statement.  Warning, this is just a default generic statement for testing purposes.  Use this space to input your custom default Usage Statement.');
+
 class adminMessagePlugin extends Omeka_Plugin_AbstractPlugin
 {
   
