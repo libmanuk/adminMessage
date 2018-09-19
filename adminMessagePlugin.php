@@ -12,21 +12,50 @@
  */
 
  // Define Constants.
- define('DEFAULT_USAGE_PAGE_STATEMENT', 'Default Usage Statement.  Warning, this is just a default generic statement for testing purposes.  Use this space to input your custom default Usage Statement.');
+ define('ADMIN_MESSAGE', 'Warning, this is just a default generic statement for testing purposes.  Use this space to input your custom Administrative Message.');
 
 class adminMessagePlugin extends Omeka_Plugin_AbstractPlugin
 {
   
-    public $_hooks = array('admin_items_show');
+    public $_hooks = array(
+     'install',
+     'uninstall',
+     'admin_items_show',
+     'define_routes',
+		   'config',
+     'config_form'
+    );
     
+	public function hookInstall()
+    {
+        set_option('admin_message', ADMIN_MESSAGE);    
+    }
+    
+    public function hookUninstall()
+    {
+        delete_option('admin_message'); 
+    }
+	
+	function hookDefineRoutes($args)
+    {
+    $router = $args['router'];
 
-
+    }
+	
+    public function hookConfigForm() 
+    {
+        include 'config_form.php';
+    }
+    
+    public function hookConfig($args)
+    {
+        $post = $args['post'];
+        set_option('admin_message',$post['admin_message']);
+    }
 
     public function hookAdminItemsShow($args)
     {
-        $filename = strip_formatting(metadata('item', array('Dublin Core', 'Identifier')));
-        echo "<p><span style=\"color:green;\">NOTE</span>:  <h5>Archival image files for this site are stored offline on the SCRC King file server.</h5> </p>";
-        echo "<p style=\"background:#fff;padding:15px;\">\\d40.net.uky.edu\king\\2004av001_Lexington_Herald_Leader_Scan_Archive\\$filename</p>";
+        echo "<p><span style=\"color:green;\">NOTE</span>:<?php echo get_option('admin_message'); // HTML ?></p>";
     }
   
 }
